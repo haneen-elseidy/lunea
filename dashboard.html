@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lunéa | لوحة التحكم الاحترافية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0f1015;
+            --surface: #1a1c23;
+            --surface-hover: #23252f;
+            --primary: #d4af37; 
+            --primary-hover: #f1c40f;
+            --text-main: #f5f5f7;
+            --text-muted: #a1a1aa;
+            --danger: #ff4757;
+            --success: #2ecc71;
+            --border: rgba(255, 255, 255, 0.05);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+            overflow: hidden; 
+        }
+        #lock-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 16, 21, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+        .lock-card {
+            background: var(--surface);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            transform: scale(0.95);
+            animation: popIn 0.5s forwards;
+        }
+        @keyframes popIn {
+            to { transform: scale(1); }
+        }
+        .lock-card i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        .lock-card h2 {
+            margin-bottom: 5px;
+            font-size: 1.5rem;
+        }
+        .lock-card p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+        .lock-input {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+            padding: 15px;
+            color: #fff;
+            border-radius: 8px;
+            outline: none;
+            text-align: center;
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+        .lock-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+        .lock-btn {
+            width: 100%;
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .lock-btn:hover {
+            background: var(--primary-hover);
+        }
+        .lock-error {
+            color: var(--danger);
+            margin-top: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        #dashboard-content {
+            display: flex;
+            width: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .sidebar {
+            width: 280px;
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .brand {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 50px;
+            letter-spacing: 1px;
+        }
+        .nav-item {
+            padding: 15px 20px;
+            border-radius: var(--radius);
+            color: var(--text-muted);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+        .nav-item:hover, .nav-item.active {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--primary);
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            height: 100vh;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        .btn {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        .btn-outline:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+        .btn-danger {
+            background: rgba(255, 71, 87, 0.1);
+            color: var(--danger);
+            border: 1px solid transparent;
+            padding: 10px 15px;
+        }
+        .btn-danger:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            transition: var(--transition);
+        }
+        .card:hover {
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .img-upload-area {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #111;
+            border: 2px dashed var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .img-upload-area:hover {
+            border-color: var(--primary);
+        }
+        .img-upload-area img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0; left: 0; z-index: 1;
+        }
+        .upload-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .img-upload-area:hover .upload-overlay {
+            opacity: 1;
+        }
+        .upload-overlay i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .form-group label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .form-control {
+            background: var(--surface-hover);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 12px 15px;
+            border-radius: 8px;
+            outline: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+        }
+        textarea.form-control::-webkit-scrollbar { width: 6px; }
+        textarea.form-control::-webkit-scrollbar-track { background: var(--surface); border-radius: 4px; }
+        textarea.form-control::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+        textarea.form-control::-webkit-scrollbar-thumb:hover { background: var(--primary-hover); }
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface-hover);
+            padding: 12px 15px;
+            border-radius: 8px;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px; width: 18px;
+            left: 4px; bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(24px); }
+        .card-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+            border-top: 1px solid var(--border);
+            padding-top: 15px;
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--success);
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(46, 204, 113, 0.4);
+            transition: var(--transition);
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast.error { background: var(--danger); box-shadow: 0 10px 30px rgba(255, 71, 87, 0.4); }
+        @media (max-width: 768px) {
+            #dashboard-content {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                border-left: none;
+                border-bottom: 1px solid var(--border);
+                padding: 15px 20px;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .brand {
+                margin-bottom: 0;
+                font-size: 1.5rem;
+                width: 100%;
+                text-align: right;
+            }
+            .nav-item {
+                margin-bottom: 0;
+                padding: 8px 12px;
+                font-size: 0.85rem;
+                flex: 1;
+                justify-content: center;
+            }
+            .main-content {
+                padding: 20px;
+                height: auto;
+                overflow-y: visible;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .header > div:last-child {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+            .header .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+            }
+            .lock-card {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="lock-screen">
+        <div class="lock-card">
+            <i class="fas fa-lock"></i>
+            <h2>Lunéa.</h2>
+            <p>الرجاء إدخال الرقم السري للوصول للوحة التحكم</p>
+            <div style="position: relative; margin-bottom: 20px;">
+                <input type="password" id="admin-password" class="lock-input" placeholder="••••" autofocus style="margin-bottom: 0;">
+                <i class="fas fa-eye" id="toggle-password" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); font-size: 1.2rem;" onclick="togglePassword()"></i>
+            </div>
+            <button class="lock-btn" onclick="verifyPassword()">فتح الداشبورد</button>
+            <div class="lock-error" id="lock-error">الرقم السري غير صحيح!</div>
+        </div>
+    </div>
+    <div id="dashboard-content">
+        <aside class="sidebar">
+            <div class="brand">Lunéa.</div>
+            <a href="#" class="nav-item active"><i class="fas fa-box"></i> المنتجات</a>
+            <a href="/" class="nav-item" target="_blank"><i class="fas fa-external-link-alt"></i> عرض المتجر</a>
+        </aside>
+        <main class="main-content">
+            <div class="header">
+                <div>
+                    <h1>إدارة المنتجات</h1>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">أضف، عدل، وارفع صور منتجاتك بسهولة</p>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <button class="btn btn-outline" onclick="addProduct()"><i class="fas fa-plus"></i> إضافة منتج</button>
+                    <button class="btn" onclick="saveChanges()"><i class="fas fa-save"></i> حفظ التغييرات</button>
+                </div>
+            </div>
+            <div class="products-grid" id="products-grid">
+            </div>
+        </main>
+    </div>
+    <input type="file" id="file-input" style="display: none;" accept="image/*">
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i> <span id="toast-msg">تم الحفظ بنجاح</span>
+    </div>
+    <script>
+        let products = [];
+        let authPassword = sessionStorage.getItem('lunea_admin_pass') || '';
+        const lockScreen = document.getElementById('lock-screen');
+        const dashboardContent = document.getElementById('dashboard-content');
+        const grid = document.getElementById('products-grid');
+        const fileInput = document.getElementById('file-input');
+        let currentUploadIndex = null;
+        if (authPassword) {
+            verifyPassword(authPassword);
+        }
+        document.getElementById('admin-password').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') verifyPassword();
+        });
+        function togglePassword() {
+            const input = document.getElementById('admin-password');
+            const icon = document.getElementById('toggle-password');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        async function verifyPassword(existingPass = null) {
+            const pass = existingPass || document.getElementById('admin-password').value.trim();
+            const errorMsg = document.getElementById('lock-error');
+            if (!pass) return;
+            try {
+                const res = await fetch('/api/verify', {
+                    method: 'POST',
+                    headers: { 'x-admin-password': pass }
+                });
+                if (!res.ok && res.status === 404) {
+                    errorMsg.innerHTML = 'خطأ: أنت تستخدم Live Server. افتح عبر localhost:3000';
+                    errorMsg.style.display = 'block';
+                    return;
+                }
+                const data = await res.json();
+                if (data.success) {
+                    authPassword = pass;
+                    sessionStorage.setItem('lunea_admin_pass', pass);
+                    lockScreen.style.opacity = '0';
+                    setTimeout(() => lockScreen.style.visibility = 'hidden', 500);
+                    document.body.style.overflow = 'auto';
+                    dashboardContent.style.opacity = '1';
+                    dashboardContent.style.pointerEvents = 'all';
+                    loadData();
+                } else {
+                    if (!existingPass) {
+                        errorMsg.innerHTML = 'الرقم السري غير صحيح!';
+                        errorMsg.style.display = 'block';
+                    } else {
+                        sessionStorage.removeItem('lunea_admin_pass');
+                    }
+                }
+            } catch (err) {
+                if (!existingPass) {
+                    errorMsg.innerHTML = 'الرقم السري غير صحيح أو السيرفر مغلق!';
+                    errorMsg.style.display = 'block';
+                }
+            }
+        }
+        async function loadData() {
+            try {
+                const res = await fetch('/products.json');
+                products = await res.json();
+                render();
+            } catch (err) {
+                showToast('خطأ في تحميل المنتجات', true);
+            }
+        }
+        function render() {
+            grid.innerHTML = '';
+            products.forEach((p, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="img-upload-area" onclick="triggerUpload(${index})">
+                        ${p.image ? `<img src="${p.image}" alt="${p.name}">` : ''}
+                        <div class="upload-overlay">
+                            <i class="fas fa-camera"></i>
+                            <span>تغيير الصورة</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>اسم المنتج</label>
+                        <input type="text" class="form-control" value="${p.name}" onchange="update(${index}, 'name', this.value)">
+                    </div>
+                    <div style="display: flex; gap: 15px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>السعر (ج.م)</label>
+                            <input type="number" class="form-control" value="${p.price}" onchange="update(${index}, 'price', Number(this.value))">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>الوصف</label>
+                        <textarea class="form-control" rows="2" onchange="update(${index}, 'description', this.value)">${p.description}</textarea>
+                    </div>
+                    <div class="toggle-container">
+                        <span style="font-size: 0.9rem;">متوفر في المخزن</span>
+                        <label class="switch">
+                            <input type="checkbox" ${p.inStock ? 'checked' : ''} onchange="update(${index}, 'inStock', this.checked)">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-danger" onclick="removeProduct(${index})">
+                            <i class="fas fa-trash-alt"></i> حذف
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        function update(index, key, value) {
+            products[index][key] = value;
+        }
+        function addProduct() {
+            products.unshift({
+                id: Date.now(),
+                name: "منتج جديد",
+                description: "",
+                price: 0,
+                image: "",
+                inStock: true
+            });
+            render();
+            document.querySelector('.main-content').scrollTo({top: 0, behavior: 'smooth'});
+        }
+        function removeProduct(index) {
+            if(confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+                products.splice(index, 1);
+                render();
+            }
+        }
+        function triggerUpload(index) {
+            currentUploadIndex = index;
+            fileInput.click();
+        }
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const formData = new FormData();
+            formData.append('image', file);
+            const originalImage = products[currentUploadIndex].image;
+            products[currentUploadIndex].image = 'https://i.gifer.com/ZKZg.gif';
+            render();
+            try {
+                const res = await fetch('/api/upload', {
+                    method: 'POST',
+                    headers: { 'x-admin-password': authPassword },
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.success) {
+                    products[currentUploadIndex].image = data.imagePath;
+                    showToast('تم رفع الصورة بنجاح');
+                } else {
+                    products[currentUploadIndex].image = originalImage;
+                    showToast(data.message || 'فشل رفع الصورة', true);
+                }
+            } catch (error) {
+                products[currentUploadIndex].image = originalImage;
+                showToast('حدث خطأ أثناء الرفع', true);
+            }
+            render();
+            fileInput.value = '';
+        });
+        async function saveChanges() {
+            try {
+                const res = await fetch('/api/products', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-admin-password': authPassword
+                    },
+                    body: JSON.stringify(products)
+                });
+                const data = await res.json();
+                if(data.success) {
+                    showToast('تم حفظ التغييرات بنجاح');
+                } else {
+                    showToast('فشل الحفظ: ' + (data.message || ''), true);
+                }
+            } catch (err) {
+                showToast('خطأ في الاتصال بالخادم', true);
+            }
+        }
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-msg');
+            const icon = toast.querySelector('i');
+            msgEl.textContent = msg;
+            if (isError) {
+                toast.classList.add('error');
+                icon.className = 'fas fa-exclamation-triangle';
+            } else {
+                toast.classList.remove('error');
+                icon.className = 'fas fa-check-circle';
+            }
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>

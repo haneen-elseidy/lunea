@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lunéa | منتجات الحمام المغربي الفاخرة</title>
+    <meta name="description" content="متجر Lunéa لمنتجات الحمام المغربي الفاخرة.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="container nav-container">
+            <div class="nav-links">
+                <a href="#products">المنتجات</a>
+                <a href="#">من نحن</a>
+            </div>
+            <a href="#" class="logo">
+                <span class="logo-text">Lunéa</span>
+            </a>
+            <div class="cart-icon" id="cart-icon">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count" id="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <h1 class="hero-main-title">Lunéa.</h1>
+            <p class="hero-subtitle">حيث تلتقي فخامة الطبيعة بأسرار الجمال المغربي</p>
+            <button class="btn btn-primary hero-btn" onclick="scrollToProducts()">
+                تصفحي مجموعتنا <i class="fas fa-arrow-down"></i>
+            </button>
+        </div>
+    </section>
+    <section class="products-section" id="products">
+        <div class="container">
+            <h2 class="section-title">منتجاتنا الفاخرة</h2>
+            <div class="products-grid" id="products-grid">
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">Lunéa.</div>
+            <p>جميع الحقوق محفوظة &copy; 2026</p>
+            <div class="social-links">
+                <a href="https://www.facebook.com/share/19VBfMDFVb/?mibextid=wwXIfr" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            </div>
+        </div>
+    </footer>
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h3>سلة مشترياتك</h3>
+            <button class="close-cart" id="close-cart"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items">
+        </div>
+        <div class="cart-footer">
+            <div class="cart-note">
+                <i class="fas fa-info-circle"></i> بمجرد الضغط على إتمام الطلب، سيتم نسخ تفاصيل طلبك تلقائياً وتحويلك لصفحتنا على ماسنجر. كل ما عليك فعله هو <strong>"لصق" (Paste)</strong> الرسالة وإرسالها لنا.
+            </div>
+            <div class="cart-total">
+                <span>الإجمالي:</span>
+                <span id="cart-total-price">0 ج.م</span>
+            </div>
+            <button class="btn btn-checkout" id="checkout-btn">
+                <i class="fab fa-facebook-messenger"></i> إتمام الطلب عبر ماسنجر
+            </button>
+        </div>
+    </div>
+    <!-- <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i> <span id="toast-message">تم</span>
+    </div> -->
+    <script src="app.js"></script>
+</body>
+</html>
