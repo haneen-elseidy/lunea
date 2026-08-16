@@ -3,7 +3,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const app = express();
-const PORT = 3000;
+const PORT = 9987;
 const ADMIN_PASSWORD = 'admin';
 const imagesDir = path.join(__dirname, 'statics/images');
 if (!fs.existsSync(imagesDir)) {
